@@ -69,19 +69,64 @@ protected:
 };
 
 
+/** Represents the display colors of the Baofeng DM-32UV. */
+class DM32UVDisplaySettingsExtension: public ConfigItem
+{
+  Q_OBJECT
+
+  Q_PROPERTY(Color callColor READ callColor WRITE setCallColor)
+  Q_PROPERTY(Color standbyColor READ standbyColor WRITE setStandbyColor)
+  Q_PROPERTY(Color channelNameAColor READ channelNameAColor WRITE setChannelNameAColor)
+  Q_PROPERTY(Color channelNameBColor READ channelNameBColor WRITE setChannelNameBColor)
+  Q_PROPERTY(Color zoneNameAColor READ zoneNameAColor WRITE setZoneNameAColor)
+  Q_PROPERTY(Color zoneNameBColor READ zoneNameBColor WRITE setZoneNameBColor)
+
+public:
+  enum class Color {
+    White = 0, Black = 1, Orange = 2, Red = 3,
+    Yellow = 4, Green = 5, Cyan = 6, Blue = 7
+  };
+  Q_ENUM(Color)
+
+  explicit DM32UVDisplaySettingsExtension(QObject *parent=nullptr);
+  ConfigItem *clone() const;
+
+  Color callColor() const;
+  void setCallColor(Color color);
+  Color standbyColor() const;
+  void setStandbyColor(Color color);
+  Color channelNameAColor() const;
+  void setChannelNameAColor(Color color);
+  Color channelNameBColor() const;
+  void setChannelNameBColor(Color color);
+  Color zoneNameAColor() const;
+  void setZoneNameAColor(Color color);
+  Color zoneNameBColor() const;
+  void setZoneNameBColor(Color color);
+
+protected:
+  Color _callColor, _standbyColor;
+  Color _channelNameAColor, _channelNameBColor;
+  Color _zoneNameAColor, _zoneNameBColor;
+};
+
+
 /** Device-specific settings for the Baofeng DM-32UV. */
 class DM32UVSettingsExtension: public ConfigExtension
 {
   Q_OBJECT
   Q_PROPERTY(DM32UVButtonSettingsExtension *buttons READ buttons)
+  Q_PROPERTY(DM32UVDisplaySettingsExtension *display READ display)
 
 public:
   Q_INVOKABLE explicit DM32UVSettingsExtension(QObject *parent=nullptr);
   ConfigItem *clone() const;
   DM32UVButtonSettingsExtension *buttons() const;
+  DM32UVDisplaySettingsExtension *display() const;
 
 protected:
   DM32UVButtonSettingsExtension *_buttons;
+  DM32UVDisplaySettingsExtension *_display;
 };
 
 #endif // DM32UVEXTENSIONS_HH

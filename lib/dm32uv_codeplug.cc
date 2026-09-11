@@ -3412,6 +3412,13 @@ DM32UVCodeplug::GeneralSettingsElement::decode(Context &ctx, const ErrorStack &e
   buttons->setP2Short(static_cast<DM32UVButtonSettingsExtension::Function>(p2Short()));
   buttons->setP2Long(static_cast<DM32UVButtonSettingsExtension::Function>(p2Long()));
   buttons->enableSideKeyLock(sideKeyLockEnabled());
+  auto *display = ctx.config()->settings()->dm32uvExtension()->display();
+  display->setCallColor(static_cast<DM32UVDisplaySettingsExtension::Color>(callColor()));
+  display->setStandbyColor(static_cast<DM32UVDisplaySettingsExtension::Color>(standbyColor()));
+  display->setChannelNameAColor(static_cast<DM32UVDisplaySettingsExtension::Color>(channelNameAColor()));
+  display->setChannelNameBColor(static_cast<DM32UVDisplaySettingsExtension::Color>(channelNameBColor()));
+  display->setZoneNameAColor(static_cast<DM32UVDisplaySettingsExtension::Color>(zoneNameAColor()));
+  display->setZoneNameBColor(static_cast<DM32UVDisplaySettingsExtension::Color>(zoneNameBColor()));
 
   return true;
 }
@@ -3480,6 +3487,13 @@ DM32UVCodeplug::GeneralSettingsElement::encode(Context &ctx, const ErrorStack &e
     setP2Short(static_cast<KeyFunction::Function>(buttons->p2Short()));
     setP2Long(static_cast<KeyFunction::Function>(buttons->p2Long()));
     enableSideKeyLock(buttons->sideKeyLock());
+    auto *display = extension->display();
+    setCallColor(static_cast<Color::Code>(display->callColor()));
+    setStandbyColor(static_cast<Color::Code>(display->standbyColor()));
+    setChannelNameAColor(static_cast<Color::Code>(display->channelNameAColor()));
+    setChannelNameBColor(static_cast<Color::Code>(display->channelNameBColor()));
+    setZoneNameAColor(static_cast<Color::Code>(display->zoneNameAColor()));
+    setZoneNameBColor(static_cast<Color::Code>(display->zoneNameBColor()));
   }
 
   return true;

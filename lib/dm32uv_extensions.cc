@@ -43,10 +43,50 @@ DM32UV_BUTTON_ACCESSORS(sideKeyLock, enableSideKeyLock, bool)
 #undef DM32UV_BUTTON_ACCESSORS
 
 
+DM32UVDisplaySettingsExtension::DM32UVDisplaySettingsExtension(QObject *parent)
+  : ConfigItem(parent), _callColor(Color::White), _standbyColor(Color::White),
+    _channelNameAColor(Color::White), _channelNameBColor(Color::White),
+    _zoneNameAColor(Color::White), _zoneNameBColor(Color::White)
+{
+}
+
+ConfigItem *
+DM32UVDisplaySettingsExtension::clone() const {
+  auto *copy = new DM32UVDisplaySettingsExtension();
+  if (!copy->copy(*this)) {
+    delete copy;
+    return nullptr;
+  }
+  return copy;
+}
+
+#define DM32UV_COLOR_ACCESSORS(name, setter) \
+  DM32UVDisplaySettingsExtension::Color \
+  DM32UVDisplaySettingsExtension::name() const { return _##name; } \
+  void DM32UVDisplaySettingsExtension::setter( \
+      DM32UVDisplaySettingsExtension::Color value) { \
+    if (_##name == value) return; \
+    _##name = value; \
+    emit modified(this); \
+  }
+
+DM32UV_COLOR_ACCESSORS(callColor, setCallColor)
+DM32UV_COLOR_ACCESSORS(standbyColor, setStandbyColor)
+DM32UV_COLOR_ACCESSORS(channelNameAColor, setChannelNameAColor)
+DM32UV_COLOR_ACCESSORS(channelNameBColor, setChannelNameBColor)
+DM32UV_COLOR_ACCESSORS(zoneNameAColor, setZoneNameAColor)
+DM32UV_COLOR_ACCESSORS(zoneNameBColor, setZoneNameBColor)
+
+#undef DM32UV_COLOR_ACCESSORS
+
+
 DM32UVSettingsExtension::DM32UVSettingsExtension(QObject *parent)
-  : ConfigExtension(parent), _buttons(new DM32UVButtonSettingsExtension(this))
+  : ConfigExtension(parent), _buttons(new DM32UVButtonSettingsExtension(this)),
+    _display(new DM32UVDisplaySettingsExtension(this))
 {
   connect(_buttons, &DM32UVButtonSettingsExtension::modified,
+          this, &DM32UVSettingsExtension::modified);
+  connect(_display, &DM32UVDisplaySettingsExtension::modified,
           this, &DM32UVSettingsExtension::modified);
 }
 
@@ -63,4 +103,9 @@ DM32UVSettingsExtension::clone() const {
 DM32UVButtonSettingsExtension *
 DM32UVSettingsExtension::buttons() const {
   return _buttons;
+}
+
+DM32UVDisplaySettingsExtension *
+DM32UVSettingsExtension::display() const {
+  return _display;
 }

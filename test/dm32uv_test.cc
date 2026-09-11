@@ -137,6 +137,13 @@ DM32UVTest::testButtonSettingsReencoding() {
   buttons->setP2Short(DM32UVButtonSettingsExtension::Function::VOX);
   buttons->setP2Long(DM32UVButtonSettingsExtension::Function::Flashlight);
   buttons->enableSideKeyLock(true);
+  auto *display = extension->display();
+  display->setCallColor(DM32UVDisplaySettingsExtension::Color::Orange);
+  display->setStandbyColor(DM32UVDisplaySettingsExtension::Color::Red);
+  display->setChannelNameAColor(DM32UVDisplaySettingsExtension::Color::Yellow);
+  display->setChannelNameBColor(DM32UVDisplaySettingsExtension::Color::Green);
+  display->setZoneNameAColor(DM32UVDisplaySettingsExtension::Color::Cyan);
+  display->setZoneNameBColor(DM32UVDisplaySettingsExtension::Color::Blue);
 
   DM32UVCodeplug codeplug;
   QVERIFY2(codeplug.encode(&config, Codeplug::Flags(), err),
@@ -156,6 +163,13 @@ DM32UVTest::testButtonSettingsReencoding() {
   QCOMPARE(decodedButtons->p2Short(), DM32UVButtonSettingsExtension::Function::VOX);
   QCOMPARE(decodedButtons->p2Long(), DM32UVButtonSettingsExtension::Function::Flashlight);
   QVERIFY(decodedButtons->sideKeyLock());
+  auto *decodedDisplay = decoded.settings()->dm32uvExtension()->display();
+  QCOMPARE(decodedDisplay->callColor(), DM32UVDisplaySettingsExtension::Color::Orange);
+  QCOMPARE(decodedDisplay->standbyColor(), DM32UVDisplaySettingsExtension::Color::Red);
+  QCOMPARE(decodedDisplay->channelNameAColor(), DM32UVDisplaySettingsExtension::Color::Yellow);
+  QCOMPARE(decodedDisplay->channelNameBColor(), DM32UVDisplaySettingsExtension::Color::Green);
+  QCOMPARE(decodedDisplay->zoneNameAColor(), DM32UVDisplaySettingsExtension::Color::Cyan);
+  QCOMPARE(decodedDisplay->zoneNameBColor(), DM32UVDisplaySettingsExtension::Color::Blue);
 }
 
 
