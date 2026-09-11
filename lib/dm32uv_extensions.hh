@@ -111,22 +111,65 @@ protected:
 };
 
 
+/** Represents general settings of the Baofeng DM-32UV. */
+class DM32UVGeneralSettingsExtension: public ConfigItem
+{
+  Q_OBJECT
+
+  Q_PROPERTY(Interval autoPowerOffDelay READ autoPowerOffDelay WRITE setAutoPowerOffDelay)
+  Q_PROPERTY(FMRogerTone fmRogerTone READ fmRogerTone WRITE setFMRogerTone)
+  Q_PROPERTY(Interval backlightDuration READ backlightDuration WRITE setBacklightDuration)
+  Q_PROPERTY(DateFormat dateFormat READ dateFormat WRITE setDateFormat)
+
+public:
+  enum class FMRogerTone {
+    Off = 0, Beep = 1, BDC = 2
+  };
+  Q_ENUM(FMRogerTone)
+
+  enum class DateFormat {
+    YYYYMMDD = 0, DDMMYYYY = 1
+  };
+  Q_ENUM(DateFormat)
+
+  explicit DM32UVGeneralSettingsExtension(QObject *parent=nullptr);
+  ConfigItem *clone() const;
+
+  Interval autoPowerOffDelay() const;
+  void setAutoPowerOffDelay(Interval delay);
+  FMRogerTone fmRogerTone() const;
+  void setFMRogerTone(FMRogerTone tone);
+  Interval backlightDuration() const;
+  void setBacklightDuration(Interval duration);
+  DateFormat dateFormat() const;
+  void setDateFormat(DateFormat format);
+
+protected:
+  Interval _autoPowerOffDelay, _backlightDuration;
+  FMRogerTone _fmRogerTone;
+  DateFormat _dateFormat;
+};
+
+
 /** Device-specific settings for the Baofeng DM-32UV. */
 class DM32UVSettingsExtension: public ConfigExtension
 {
   Q_OBJECT
   Q_PROPERTY(DM32UVButtonSettingsExtension *buttons READ buttons)
   Q_PROPERTY(DM32UVDisplaySettingsExtension *display READ display)
+  Q_PROPERTY(DM32UVGeneralSettingsExtension *general READ general)
 
 public:
   Q_INVOKABLE explicit DM32UVSettingsExtension(QObject *parent=nullptr);
   ConfigItem *clone() const;
   DM32UVButtonSettingsExtension *buttons() const;
   DM32UVDisplaySettingsExtension *display() const;
+  DM32UVGeneralSettingsExtension *general() const;
 
 protected:
   DM32UVButtonSettingsExtension *_buttons;
   DM32UVDisplaySettingsExtension *_display;
+  DM32UVGeneralSettingsExtension *_general;
 };
 
 #endif // DM32UVEXTENSIONS_HH

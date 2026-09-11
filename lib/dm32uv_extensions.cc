@@ -80,14 +80,52 @@ DM32UV_COLOR_ACCESSORS(zoneNameBColor, setZoneNameBColor)
 #undef DM32UV_COLOR_ACCESSORS
 
 
+DM32UVGeneralSettingsExtension::DM32UVGeneralSettingsExtension(QObject *parent)
+  : ConfigItem(parent), _autoPowerOffDelay(Interval::infinity()),
+    _backlightDuration(Interval::infinity()),
+    _fmRogerTone(FMRogerTone::Off), _dateFormat(DateFormat::YYYYMMDD)
+{
+}
+
+ConfigItem *
+DM32UVGeneralSettingsExtension::clone() const {
+  auto *copy = new DM32UVGeneralSettingsExtension();
+  if (!copy->copy(*this)) {
+    delete copy;
+    return nullptr;
+  }
+  return copy;
+}
+
+#define DM32UV_GENERAL_ACCESSORS(name, setter, type) \
+  type DM32UVGeneralSettingsExtension::name() const { return _##name; } \
+  void DM32UVGeneralSettingsExtension::setter(type value) { \
+    if (_##name == value) return; \
+    _##name = value; \
+    emit modified(this); \
+  }
+
+DM32UV_GENERAL_ACCESSORS(autoPowerOffDelay, setAutoPowerOffDelay, Interval)
+DM32UV_GENERAL_ACCESSORS(
+  fmRogerTone, setFMRogerTone, DM32UVGeneralSettingsExtension::FMRogerTone)
+DM32UV_GENERAL_ACCESSORS(backlightDuration, setBacklightDuration, Interval)
+DM32UV_GENERAL_ACCESSORS(
+  dateFormat, setDateFormat, DM32UVGeneralSettingsExtension::DateFormat)
+
+#undef DM32UV_GENERAL_ACCESSORS
+
+
 DM32UVSettingsExtension::DM32UVSettingsExtension(QObject *parent)
   : ConfigExtension(parent), _buttons(new DM32UVButtonSettingsExtension(this)),
-    _display(new DM32UVDisplaySettingsExtension(this))
+    _display(new DM32UVDisplaySettingsExtension(this)),
+    _general(new DM32UVGeneralSettingsExtension(this))
 {
   connect(_buttons, &DM32UVButtonSettingsExtension::modified,
           this, &DM32UVSettingsExtension::modified);
   connect(_display, &DM32UVDisplaySettingsExtension::modified,
           this, &DM32UVSettingsExtension::modified);
+    connect(_general, &DM32UVGeneralSettingsExtension::modified,
+      this, &DM32UVSettingsExtension::modified);
 }
 
 ConfigItem *
@@ -108,4 +146,9 @@ DM32UVSettingsExtension::buttons() const {
 DM32UVDisplaySettingsExtension *
 DM32UVSettingsExtension::display() const {
   return _display;
+}
+
+DM32UVGeneralSettingsExtension *
+DM32UVSettingsExtension::general() const {
+  return _general;
 }

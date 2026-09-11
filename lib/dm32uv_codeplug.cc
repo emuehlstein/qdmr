@@ -3419,6 +3419,11 @@ DM32UVCodeplug::GeneralSettingsElement::decode(Context &ctx, const ErrorStack &e
   display->setChannelNameBColor(static_cast<DM32UVDisplaySettingsExtension::Color>(channelNameBColor()));
   display->setZoneNameAColor(static_cast<DM32UVDisplaySettingsExtension::Color>(zoneNameAColor()));
   display->setZoneNameBColor(static_cast<DM32UVDisplaySettingsExtension::Color>(zoneNameBColor()));
+  auto *general = ctx.config()->settings()->dm32uvExtension()->general();
+  general->setAutoPowerOffDelay(autoPowerOffDelay());
+  general->setFMRogerTone(static_cast<DM32UVGeneralSettingsExtension::FMRogerTone>(fmRogerTone()));
+  general->setBacklightDuration(backlightDuration());
+  general->setDateFormat(static_cast<DM32UVGeneralSettingsExtension::DateFormat>(dateFormat()));
 
   return true;
 }
@@ -3494,6 +3499,11 @@ DM32UVCodeplug::GeneralSettingsElement::encode(Context &ctx, const ErrorStack &e
     setChannelNameBColor(static_cast<Color::Code>(display->channelNameBColor()));
     setZoneNameAColor(static_cast<Color::Code>(display->zoneNameAColor()));
     setZoneNameBColor(static_cast<Color::Code>(display->zoneNameBColor()));
+    auto *general = extension->general();
+    setAutoPowerOffDelay(general->autoPowerOffDelay());
+    setFMRogerTone(static_cast<FMRogerTone>(general->fmRogerTone()));
+    setBacklightDuration(general->backlightDuration());
+    setDateFormat(static_cast<DateFormat>(general->dateFormat()));
   }
 
   return true;

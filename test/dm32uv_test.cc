@@ -144,6 +144,11 @@ DM32UVTest::testButtonSettingsReencoding() {
   display->setChannelNameBColor(DM32UVDisplaySettingsExtension::Color::Green);
   display->setZoneNameAColor(DM32UVDisplaySettingsExtension::Color::Cyan);
   display->setZoneNameBColor(DM32UVDisplaySettingsExtension::Color::Blue);
+  auto *general = extension->general();
+  general->setAutoPowerOffDelay(Interval::fromMinutes(60));
+  general->setFMRogerTone(DM32UVGeneralSettingsExtension::FMRogerTone::BDC);
+  general->setBacklightDuration(Interval::fromMinutes(2));
+  general->setDateFormat(DM32UVGeneralSettingsExtension::DateFormat::DDMMYYYY);
 
   DM32UVCodeplug codeplug;
   QVERIFY2(codeplug.encode(&config, Codeplug::Flags(), err),
@@ -170,6 +175,11 @@ DM32UVTest::testButtonSettingsReencoding() {
   QCOMPARE(decodedDisplay->channelNameBColor(), DM32UVDisplaySettingsExtension::Color::Green);
   QCOMPARE(decodedDisplay->zoneNameAColor(), DM32UVDisplaySettingsExtension::Color::Cyan);
   QCOMPARE(decodedDisplay->zoneNameBColor(), DM32UVDisplaySettingsExtension::Color::Blue);
+  auto *decodedGeneral = decoded.settings()->dm32uvExtension()->general();
+  QCOMPARE(decodedGeneral->autoPowerOffDelay(), Interval::fromMinutes(60));
+  QCOMPARE(decodedGeneral->fmRogerTone(), DM32UVGeneralSettingsExtension::FMRogerTone::BDC);
+  QCOMPARE(decodedGeneral->backlightDuration(), Interval::fromMinutes(2));
+  QCOMPARE(decodedGeneral->dateFormat(), DM32UVGeneralSettingsExtension::DateFormat::DDMMYYYY);
 }
 
 
