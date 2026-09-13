@@ -1435,7 +1435,7 @@ public:
      * scheme. */
     struct Color {
       enum class Code {
-        White = 0, Black = 1, Orange = 2, Red = 3, Yellow = 4, Green = 5, Cyan = 6, Blue = 7
+        White = 0, Gray = 1, Orange = 2, Red = 3, Yellow = 4, Green = 5, Cyan = 6, Blue = 7
       };
 
       static unsigned int encode(Code name);

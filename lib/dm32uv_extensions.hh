@@ -83,7 +83,7 @@ class DM32UVDisplaySettingsExtension: public ConfigItem
 
 public:
   enum class Color {
-    White = 0, Black = 1, Orange = 2, Red = 3,
+    White = 0, Gray = 1, Orange = 2, Red = 3,
     Yellow = 4, Green = 5, Cyan = 6, Blue = 7
   };
   Q_ENUM(Color)
